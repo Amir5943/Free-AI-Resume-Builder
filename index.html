@@ -1,30 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AmirAI Resume Builder</title>
+
+<title>AmirAI - Smart Resume Builder</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+
+:root{
+--bg:#f4f7fb;
+--card:#ffffff;
+--text:#222;
+--accent:#3498db;
+--accent2:#2ecc71;
+}
+
+.dark{
+--bg:#111;
+--card:#1e1e1e;
+--text:#eee;
+}
+
 body{
-font-family: Arial;
-background:#f5f7fb;
+margin:0;
+font-family:Arial;
+background:var(--bg);
+color:var(--text);
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:var(--card);
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+}
+
+nav button{
+margin-left:10px;
+padding:10px 15px;
+border:none;
+border-radius:6px;
+background:var(--accent);
+color:white;
+cursor:pointer;
+}
+
+.hero{
 text-align:center;
+padding:90px 20px;
 }
 
-.container{
-background:white;
+.hero h1{
+font-size:46px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+color:#666;
+}
+
+.cta{
+margin-top:25px;
+padding:15px 30px;
+font-size:18px;
+background:var(--accent2);
+border:none;
+border-radius:8px;
+color:white;
+cursor:pointer;
+}
+
+.tools{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
 padding:40px;
-width:600px;
+max-width:1200px;
 margin:auto;
-margin-top:80px;
+}
+
+.card{
+background:var(--card);
+padding:30px;
 border-radius:10px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+transition:0.2s;
 }
 
-h1{
-font-size:32px;
+.card:hover{
+transform:translateY(-5px);
 }
 
-input, textarea{
+.builder{
+background:var(--card);
+max-width:800px;
+margin:40px auto;
+padding:40px;
+border-radius:10px;
+box-shadow:0 12px 30px rgba(0,0,0,0.1);
+}
+
+input,textarea,select{
 width:100%;
 padding:12px;
 margin:10px 0;
@@ -33,13 +119,13 @@ border:1px solid #ccc;
 }
 
 button{
-background:#2ecc71;
+background:var(--accent);
 color:white;
-padding:12px 20px;
 border:none;
+padding:12px 18px;
 border-radius:6px;
-font-size:16px;
 cursor:pointer;
+margin-top:5px;
 }
 
 .resume{
@@ -48,38 +134,323 @@ padding:20px;
 margin-top:20px;
 border-radius:8px;
 }
+
+.templates{
+text-align:center;
+padding:40px;
+}
+
+.template{
+display:inline-block;
+background:var(--card);
+padding:25px;
+margin:10px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+footer{
+text-align:center;
+padding:40px;
+color:#777;
+}
+
+.counter{
+text-align:center;
+margin-top:10px;
+font-size:14px;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-<h1>AmirAI Resume Builder</h1>
-<p>Create a professional resume in seconds</p>
+<div class="logo">AmirAI</div>
 
-<input id="name" placeholder="Your Name">
+<nav>
+
+<button onclick="toggleTheme()">🌙</button>
+
+<button onclick="login()">Login</button>
+
+<button onclick="signup()">Signup</button>
+
+</nav>
+
+</header>
+
+<section class="hero">
+
+<h1>AI Resume Builder</h1>
+
+<p>Create professional resumes instantly using smart tools.</p>
+
+<button class="cta" onclick="scrollBuilder()">Start Building</button>
+
+<div class="counter" id="visits"></div>
+
+</section>
+
+<section class="tools">
+
+<div class="card">
+<h3>AI Resume Builder</h3>
+<p>Create resumes instantly</p>
+</div>
+
+<div class="card">
+<h3>Skill Generator</h3>
+<p>Generate job skills</p>
+</div>
+
+<div class="card">
+<h3>Summary Writer</h3>
+<p>Write powerful summaries</p>
+</div>
+
+<div class="card">
+<h3>Experience Generator</h3>
+<p>Create job experience text</p>
+</div>
+
+</section>
+
+<section class="builder" id="builder">
+
+<h2>Create Your Resume</h2>
+
+<input id="name" placeholder="Full Name">
+
 <input id="job" placeholder="Job Title">
+
 <textarea id="skills" placeholder="Skills"></textarea>
 
-<button onclick="generate()">Generate Resume</button>
+<textarea id="experience" placeholder="Work Experience"></textarea>
 
-<div class="resume" id="output"></div>
+<textarea id="summary" placeholder="Professional Summary"></textarea>
 
+<select id="theme">
+<option>Default</option>
+<option>Modern</option>
+<option>Minimal</option>
+</select>
+
+<button onclick="generateResume()">Generate Resume</button>
+
+<button onclick="aiSkills()">AI Skills</button>
+
+<button onclick="aiSummary()">AI Summary</button>
+
+<button onclick="aiExperience()">AI Experience</button>
+
+<button onclick="saveResume()">Save Resume</button>
+
+<button onclick="loadResume()">Load Resume</button>
+
+<button onclick="copyResume()">Copy Resume</button>
+
+<button onclick="downloadPDF()">Download PDF</button>
+
+<div class="resume" id="resumeOutput"></div>
+
+</section>
+
+<section class="templates">
+
+<h2>Premium Templates</h2>
+
+<div class="template">
+<h3>Executive</h3>
+<button onclick="upgrade()">Unlock</button>
 </div>
+
+<div class="template">
+<h3>Startup</h3>
+<button onclick="upgrade()">Unlock</button>
+</div>
+
+<div class="template">
+<h3>Creative</h3>
+<button onclick="upgrade()">Unlock</button>
+</div>
+
+</section>
+
+<footer>
+
+<p>© 2026 AmirAI</p>
+
+</footer>
 
 <script>
 
-function generate(){
-let name=document.getElementById("name").value;
-let job=document.getElementById("job").value;
-let skills=document.getElementById("skills").value;
+function scrollBuilder(){
 
-document.getElementById("output").innerHTML=
-"<h2>"+name+"</h2>"+
-"<p><b>Job:</b> "+job+"</p>"+
-"<p><b>Skills:</b> "+skills+"</p>";
+document.getElementById("builder").scrollIntoView({behavior:"smooth"})
+
 }
+
+function generateResume(){
+
+let name=document.getElementById("name").value
+let job=document.getElementById("job").value
+let skills=document.getElementById("skills").value
+let exp=document.getElementById("experience").value
+let sum=document.getElementById("summary").value
+
+document.getElementById("resumeOutput").innerHTML=
+
+"<h2>"+name+"</h2>"+
+
+"<b>"+job+"</b>"+
+
+"<h3>Summary</h3>"+sum+
+
+"<h3>Skills</h3>"+skills+
+
+"<h3>Experience</h3>"+exp
+
+}
+
+function aiSkills(){
+
+let job=document.getElementById("job").value.toLowerCase()
+
+let skills="Communication, Teamwork, Problem Solving"
+
+if(job.includes("developer"))
+skills="JavaScript, HTML, CSS, Git, APIs"
+
+if(job.includes("designer"))
+skills="UI/UX Design, Photoshop, Branding"
+
+if(job.includes("manager"))
+skills="Leadership, Planning, Strategy"
+
+document.getElementById("skills").value=skills
+
+}
+
+function aiSummary(){
+
+let job=document.getElementById("job").value
+
+document.getElementById("summary").value=
+
+"Motivated "+job+" with strong problem solving skills and a passion for delivering results."
+
+}
+
+function aiExperience(){
+
+document.getElementById("experience").value=
+
+"Worked in fast paced environments delivering high quality work and collaborating with teams to achieve project goals."
+
+}
+
+function copyResume(){
+
+let text=document.getElementById("resumeOutput").innerText
+
+navigator.clipboard.writeText(text)
+
+alert("Copied")
+
+}
+
+function downloadPDF(){
+
+window.print()
+
+}
+
+function saveResume(){
+
+let data={
+
+name:document.getElementById("name").value,
+job:document.getElementById("job").value,
+skills:document.getElementById("skills").value,
+exp:document.getElementById("experience").value,
+sum:document.getElementById("summary").value
+
+}
+
+localStorage.setItem("resume",JSON.stringify(data))
+
+alert("Saved")
+
+}
+
+function loadResume(){
+
+let data=JSON.parse(localStorage.getItem("resume"))
+
+if(!data)return
+
+document.getElementById("name").value=data.name
+document.getElementById("job").value=data.job
+document.getElementById("skills").value=data.skills
+document.getElementById("experience").value=data.exp
+document.getElementById("summary").value=data.sum
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("dark")
+
+}
+
+function login(){
+
+let u=prompt("Username")
+let p=prompt("Password")
+
+if(localStorage.getItem(u)==p)
+alert("Welcome "+u)
+else
+alert("User not found")
+
+}
+
+function signup(){
+
+let u=prompt("Create username")
+let p=prompt("Create password")
+
+localStorage.setItem(u,p)
+
+alert("Account created")
+
+}
+
+function upgrade(){
+
+alert("Premium templates coming soon")
+
+}
+
+function visits(){
+
+let v=localStorage.getItem("visits")
+
+if(!v)v=0
+
+v++
+
+localStorage.setItem("visits",v)
+
+document.getElementById("visits").innerText="Visitors: "+v
+
+}
+
+visits()
 
 </script>
 
